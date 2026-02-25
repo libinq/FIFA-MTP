@@ -1,13 +1,49 @@
-import { useState } from 'react';
-import { Plus, Trash2, GripVertical, CheckCircle2, User, Calendar, Edit2, Save, X } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { Plus, Trash2, GripVertical, CheckCircle2, User, Calendar, Edit2, Save, X, Download, Upload } from 'lucide-react';
 
-const TaskBoard = ({ tasks, onAddTask, onDeleteTask, onUpdateProgress, onUpdateTask }) => {
+const TaskBoard = ({ tasks, onAddTask, onDeleteTask, onUpdateProgress, onUpdateTask, onImportTasks }) => {
   const [newTaskName, setNewTaskName] = useState('');
   const [newOwner, setNewOwner] = useState('');
   const [newTargetDate, setNewTargetDate] = useState('');
   
   const [editingId, setEditingId] = useState(null);
   const [editForm, setEditForm] = useState({ name: '', owner: '', targetDate: '' });
+  
+  const fileInputRef = useRef(null);
+
+  const handleExport = () => {
+    const dataStr = JSON.stringify(tasks, null, 2);
+    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+    
+    const exportFileDefaultName = `fifa-mission-tasks-${new Date().toISOString().split('T')[0]}.json`;
+    
+    const linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
+  };
+
+  const handleImportClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleImportFile = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const fileReader = new FileReader();
+    fileReader.readAsText(file, "UTF-8");
+    fileReader.onload = e => {
+      try {
+        const importedTasks = JSON.parse(e.target.result);
+        onImportTasks(importedTasks);
+      } catch (error) {
+        alert('Error parsing JSON file');
+      }
+      // Reset input so same file can be selected again
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    };
+  };
 
   const handleAdd = (e) => {
     e.preventDefault();
@@ -49,7 +85,32 @@ const TaskBoard = ({ tasks, onAddTask, onDeleteTask, onUpdateProgress, onUpdateT
           <span className="w-2 h-8 bg-lenovo-red rounded-full"></span>
           Mission Log
         </h2>
-        <span className="text-sm text-gray-400 font-mono">{tasks.length} Active Tasks</span>
+        <div className="flex items-center gap-4">
+          <span className="text-sm text-gray-400 font-mono">{tasks.length} Active Tasks</span>
+          <div className="flex gap-2">
+            <button 
+              onClick={handleExport}
+              className="p-2 bg-white/5 hover:bg-white/10 rounded-lg text-gray-300 hover:text-white transition-colors"
+              title="Export Tasks"
+            >
+              <Download size={18} />
+            </button>
+            <button 
+              onClick={handleImportClick}
+              className="p-2 bg-white/5 hover:bg-white/10 rounded-lg text-gray-300 hover:text-white transition-colors"
+              title="Import Tasks"
+            >
+              <Upload size={18} />
+            </button>
+            <input 
+              type="file" 
+              ref={fileInputRef} 
+              onChange={handleImportFile} 
+              className="hidden" 
+              accept=".json"
+            />
+          </div>
+        </div>
       </div>
 
       <form onSubmit={handleAdd} className="grid grid-cols-1 md:grid-cols-12 gap-4 mb-8 bg-white/5 p-4 rounded-xl border border-white/5">

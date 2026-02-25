@@ -57,6 +57,23 @@ function App() {
     ));
   };
 
+  const importTasks = (importedTasks) => {
+    // Validate imported tasks
+    if (Array.isArray(importedTasks)) {
+      const validTasks = importedTasks.filter(t => 
+        t.id && t.name && typeof t.progress === 'number'
+      );
+      if (validTasks.length > 0) {
+        setTasks(validTasks);
+        alert(`Successfully imported ${validTasks.length} tasks!`);
+      } else {
+        alert('No valid tasks found in the file.');
+      }
+    } else {
+      alert('Invalid file format.');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-lenovo-black text-white selection:bg-lenovo-red selection:text-white font-sans overflow-x-hidden">
       {/* Dynamic Background */}
@@ -153,6 +170,7 @@ function App() {
             onDeleteTask={deleteTask} 
             onUpdateProgress={updateProgress}
             onUpdateTask={updateTaskDetails}
+            onImportTasks={importTasks}
           />
         </section>
 
