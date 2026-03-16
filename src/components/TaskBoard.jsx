@@ -162,7 +162,7 @@ const TaskBoard = ({ tasks, onAddTask, onDeleteTask, onUpdateProgress, onUpdateT
         </div>
       </form>
 
-      <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {tasks.length === 0 ? (
           <div className="text-center py-10 text-gray-500 italic">
             No active missions. Add a task to begin tracking.
