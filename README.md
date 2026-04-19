@@ -1,64 +1,95 @@
-# Lenovo x FIFA Project Countdown
+# Lenovo x FIFA Project Countdown Dashboard
 
-This is a countdown and task management dashboard for the Lenovo x FIFA partnership project.
+A countdown and task management dashboard for the Lenovo x FIFA partnership project, built to track progress toward the project launch on **May 1, 2026**.
 
 ## Features
 
-- **Countdown Timer**: Real-time countdown to the project launch on May 1, 2026.
-- **Task Management**: Add, delete, and update project tasks with progress tracking.
-- **Dynamic Progress**: Overall project readiness calculation based on individual task completion.
-- **Theme**: Dark mode UI inspired by Lenovo (Red/Black) and FIFA (Blue/Gold) branding.
+- **Real-Time Countdown**: Live countdown (days, hours, minutes, seconds) to the May 1, 2026 launch date.
+- **Task Management**: Create, edit, delete, and track mission objectives with owner assignment and target dates.
+- **Progress Tracking**: Per-task progress sliders (0–100%) with an aggregate "Overall Readiness" metric.
+- **Import / Export**: Save and restore task configurations as JSON files for offline backup and sharing.
+- **Local Persistence**: All tasks are automatically saved to browser `localStorage`.
+- **Branded UI**: Dark mode design combining Lenovo (red/black) and FIFA (blue/gold) branding with glassmorphism effects.
+- **Responsive Layout**: 2-column grid on desktop, single-column on mobile.
 
 ## Tech Stack
 
-- React + Vite
-- Tailwind CSS
-- Lucide React Icons
+| Category | Technology |
+|---|---|
+| Frontend Framework | React 18 + Vite 5 |
+| Styling | Tailwind CSS 3 |
+| Icons | Lucide React |
+| Fonts | Inter (Google Fonts) |
+| Deployment | gh-pages / Docker / Tencent Cloud Webify |
 
 ## Getting Started
 
-1.  **Install dependencies**:
-    ```bash
-    npm install
-    ```
+**Install dependencies:**
+```bash
+npm install
+```
 
-2.  **Start development server**:
-    ```bash
-    npm run dev
-    ```
+**Start development server:**
+```bash
+npm run dev
+```
 
-3.  **Build for production**:
-    ```bash
-    npm run build
-    ```
+**Build for production:**
+```bash
+npm run build
+```
+
+**Preview production build locally:**
+```bash
+npm run preview
+```
 
 ## Deployment
 
 ### Option 1: GitHub Pages (Recommended for Demo)
-This project is configured to deploy automatically to GitHub Pages.
-Run the following command to deploy:
+
+Deploy to GitHub Pages with a single command:
+
 ```bash
 npm run deploy
 ```
 
 ### Option 2: Tencent Cloud Webify (Recommended for Production)
-1.  Go to [Tencent Cloud Webify Console](https://console.cloud.tencent.com/webify).
-2.  Click "Create Application".
-3.  Connect your GitHub account and select this repository (`FIFA-MTP`).
-4.  Webify will automatically detect the framework (Vite/React).
-5.  Click "Deploy".
 
-### Option 3: Docker (For Cloud Servers / CVM)
-If you prefer deploying to a server or container service:
+1. Go to [Tencent Cloud Webify Console](https://console.cloud.tencent.com/webify).
+2. Click **Create Application**.
+3. Connect your GitHub account and select the `FIFA-MTP` repository.
+4. Webify will automatically detect the Vite/React framework.
+5. Click **Deploy**.
 
-1.  **Build Docker image**:
-    ```bash
-    docker build -t fifa-mtp .
-    ```
+### Option 3: Docker
 
-2.  **Run container**:
-    ```bash
-    docker run -d -p 80:80 fifa-mtp
-    ```
+```bash
+# Build image
+docker build -t fifa-mtp .
+
+# Run container
+docker run -d -p 80:80 fifa-mtp
+```
 
 The application will be available at `http://localhost`.
+
+The Docker setup uses a multi-stage build (Node 18 Alpine → Nginx Alpine) with SPA routing configured in `nginx.conf`.
+
+## Project Structure
+
+```
+FIFA-MTP/
+├── src/
+│   ├── App.jsx               # Root component; manages task state and localStorage sync
+│   ├── main.jsx              # React entry point
+│   ├── index.css             # Global styles and Tailwind imports
+│   └── components/
+│       ├── Countdown.jsx     # Real-time countdown timer
+│       └── TaskBoard.jsx     # Task CRUD, progress sliders, import/export
+├── index.html
+├── vite.config.js
+├── tailwind.config.js        # Custom Lenovo/FIFA color tokens and animations
+├── Dockerfile
+└── nginx.conf
+```
